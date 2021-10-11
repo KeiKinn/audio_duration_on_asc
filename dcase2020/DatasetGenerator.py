@@ -23,6 +23,6 @@ class DCASE2020(Dataset):
             if "baseline" == self.backbone:
                 return {'audio_name': audio_name, 'label': label, 'logmel': logmel}
             elif "dresnet" == self.backbone:
-                delta= hf['delta'][index]
+                delta = hf['delta'][index]
                 delta_delta = hf['delta-delta'][index]
                 return {'audio_name': audio_name, 'label': label, 'logmel': logmel, 'delta': delta, 'delta-delta': delta_delta}

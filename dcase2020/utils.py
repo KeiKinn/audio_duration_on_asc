@@ -14,6 +14,18 @@ def create_folder(fd):
         os.makedirs(fd)
 
 
+def create_workspace(workspace, folder_name):
+    paths = dict()
+    paths['img_dir_path'] = os.path.join(workspace, 'img', '{}'.format(folder_name))
+    paths['storage_dir_path'] = os.path.join(workspace, 'saved_data', '{}'.format(folder_name))
+    paths['models_dir_path'] = os.path.join(workspace, 'models', '{}'.format(folder_name))
+
+    for key in paths:
+        create_folder(paths[key])
+    return paths
+
+
+
 def generate_string(args):
     profile = args.profile
     batch_size = args.batch_size
@@ -37,7 +49,6 @@ def generate_string(args):
     tag = train_info + model_info + augmentation + slices_info
     generals_str = time_stamp + tag
     return generals_str
-
 
 def get_dataset(backbone, database, profile='train'):
 
