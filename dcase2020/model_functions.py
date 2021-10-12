@@ -38,12 +38,13 @@ def get_train_model(backbone=None, pretrain=False, path=None, slices=0.0):
 
     if pretrain == True:
         lf.logging_something('loading Pretrained model')
-        device = c.device
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         map_location = torch.device(device)
         pretrained_path = path
         model.load_state_dict(torch.load(pretrained_path, map_location)['model'])
 
     lf.logging_something('model\n {}'.format(model))
+    lf.logging_something("Trainable parameters sum in the model: {}".format(model.count_pars()))
     return model
 
 

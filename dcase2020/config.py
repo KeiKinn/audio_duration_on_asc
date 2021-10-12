@@ -1,4 +1,3 @@
-import torch
 
 num_workers = 2
 epochs = 50
@@ -6,9 +5,6 @@ epochs = 50
 sample_rate = 44100
 sample_len = 10
 
-threshold = 67.0
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 databases ={
 

@@ -1,6 +1,5 @@
 import os
 import torch
-import time
 import numpy as np
 import DatasetGenerator as dg
 import logging
@@ -13,42 +12,6 @@ def create_folder(fd):
     if not os.path.exists(fd):
         os.makedirs(fd)
 
-
-def create_workspace(workspace, folder_name):
-    paths = dict()
-    paths['img_dir_path'] = os.path.join(workspace, 'img', '{}'.format(folder_name))
-    paths['storage_dir_path'] = os.path.join(workspace, 'saved_data', '{}'.format(folder_name))
-    paths['models_dir_path'] = os.path.join(workspace, 'models', '{}'.format(folder_name))
-
-    for key in paths:
-        create_folder(paths[key])
-    return paths
-
-
-
-def generate_string(args):
-    profile = args.profile
-    batch_size = args.batch_size
-    learning_rate = args.learning_rate
-    backbone = args.backbone
-    alpha = args.augmentation_alpha
-    slices = args.slice
-
-    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime(time.time()))
-    train_info = '_BS_' + str(batch_size) + '_LR_' + str(learning_rate) + '_PF_' + profile[0]
-    model_info = '_BB_' + backbone[0:4]
-    if alpha > 0.0:
-        augmentation = ('_AA_' + str(alpha))
-    else:
-        augmentation =''
-    
-    slices_info = ''
-    if slices > 0.0:
-        slices_info = '_SL_' + str(slices)
-
-    tag = train_info + model_info + augmentation + slices_info
-    generals_str = time_stamp + tag
-    return generals_str
 
 def get_dataset(backbone, database, profile='train'):
 
@@ -106,7 +69,7 @@ def scoring(truth, pred, y_scores):
 def generate_saved_data_file_info(storage_dir_path, tag):
 
     while os.path.isfile(storage_dir_path+'/saved_data_{}.npz'.format(tag)):
-	    tag += 10000
+        tag += 10000
     saved_data_name = 'saved_data_' + str(tag) + '.npz'
 
     storage_path = os.path.join(storage_dir_path, '{}'.format(saved_data_name))
