@@ -1,6 +1,6 @@
 import os
 import sys
-
+import torch
 sys.path.append(os.path.join(sys.path[0], '../'))
 import Model as M
 import model_components as mc
@@ -54,7 +54,6 @@ class DualResnet(M.Model):
 
 
 if __name__ == '__main__':
-    import torch
     import numpy as np
     from torchinfo import summary
 

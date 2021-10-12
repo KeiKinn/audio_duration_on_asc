@@ -15,6 +15,7 @@ import output_analysis as oa
 import Controller as C
 import BasicConfigController as BC
 import BasicConfigData as BCD
+import BoardController as BoC
 
 
 def initialization():
@@ -69,7 +70,7 @@ def train(dataloaders, model, criterion, optimizer, scheduler):
     time_begin = time.time()
     for epoch in range(epochs):
         lf.logging_progress(epoch, epochs, optimizer.param_groups[0]['lr'])
-        if basic_cfg.is_updated:
+        if basic_cfg.is_updated():
             basic_cfg_data.update_values(basic_cfg.values)
             lf.logging_something("New Basic Config is loaded...")
 
@@ -121,12 +122,18 @@ def train(dataloaders, model, criterion, optimizer, scheduler):
             accuracy = 100 * correct / total
             lf.logging_train_results(phase, accuracy, epoch_loss)
 
+
             if 'train' in phase:
                 train_loss.append(epoch_loss)
                 train_accuracy.append(accuracy)
             else:
                 val_loss.append(epoch_loss)
                 val_accuracy.append(accuracy)
+
+                BoC.writer.add_scalars("loss", {"train_loss": train_loss[-1],
+                                               "val_loss": val_loss[-1]}, epoch)
+                BoC.writer.add_scalars("accuracy", {"train_accuracy": train_accuracy[-1],
+                                               "val_accuracy": val_accuracy[-1]}, epoch)
 
             y_scores = list(itertools.chain(*y_scores))
             predicts = list(itertools.chain(*predicts))
@@ -170,7 +177,7 @@ if __name__ == '__main__':
     parser_train.add_argument('--learning_rate', type=float, default=0.001)
     parser_train.add_argument('--batch_size', type=int, default=16)
     parser_train.add_argument('--epochs', type=int, default=30)
-    parser_train.add_argument('--augmentation_alpha', type=float, default=1.0)
+    parser_train.add_argument('--augmentation_alpha', type=float, default=-1.0)
     parser_train.add_argument('--slice', type=float, default=0.0)
 
     # Parse arguments
