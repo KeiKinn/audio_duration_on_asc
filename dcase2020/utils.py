@@ -1,11 +1,14 @@
-import os
-import torch
-import numpy as np
-import DatasetGenerator as dg
 import logging
-from sklearn.metrics import recall_score, confusion_matrix, roc_auc_score
-import constants as c
+import os
 import random
+
+import numpy as np
+import torch
+from sklearn.metrics import recall_score, confusion_matrix, roc_auc_score
+
+import DatasetGenerator as dg
+import constants as c
+
 
 # Note: this is easy to transplant, need little modifications
 def create_folder(fd):

@@ -1,21 +1,23 @@
+import argparse
+import itertools
 import os
+import time
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data
-import argparse
-import time
-import constants as c
-import itertools
-import plot_functions as pf
-import utils as ut
-import model_functions as mf
-import logging_functions as lf
-import output_analysis as oa
-import Controller as C
+
 import BasicConfigController as BC
 import BasicConfigData as BCD
 import BoardController as BoC
+import Controller as C
+import constants as c
+import logging_functions as lf
+import model_functions as mf
+import output_analysis as oa
+import plot_functions as pf
+import utils as ut
 
 
 def initialization():

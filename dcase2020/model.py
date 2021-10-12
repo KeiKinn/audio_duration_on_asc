@@ -1,6 +1,8 @@
 import os
 import sys
+
 import torch
+
 sys.path.append(os.path.join(sys.path[0], '../'))
 import Model as M
 import model_components as mc

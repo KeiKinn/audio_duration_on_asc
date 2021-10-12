@@ -1,7 +1,10 @@
 import os
-import torch
 import time
+
+import torch
+
 import utils as ut
+
 
 # Note: need modify for new projects
 class Controller(object):
