@@ -39,8 +39,8 @@ def running_profile():
     return dataloaders
 
 
-def initial_network(pretrained_dir):
-    pretrained_path = os.path.join(pretrained_dir, ctrl.pretrained_model_name)
+def initial_network():
+    pretrained_path = ctrl.pretrained_model_path()
 
     model = mf.get_train_model(ctrl.backbone, ctrl.pretrain, pretrained_path, ctrl.slices)
     model = mf.set_model(model, ctrl.device)
@@ -71,6 +71,7 @@ def train(dataloaders, model, criterion, optimizer, scheduler):
         lf.logging_progress(epoch, epochs, optimizer.param_groups[0]['lr'])
         if basic_cfg.is_updated:
             basic_cfg_data.update_values(basic_cfg.values)
+            lf.logging_something("New Basic Config is loaded...")
 
         y_scores_npy = []
         predicts_npy = []
@@ -137,15 +138,12 @@ def train(dataloaders, model, criterion, optimizer, scheduler):
 
             # Plot
             if phase == 'val':
-                if epoch % 20 == 19 or epoch == (epochs - 1) or accuracy > basic_cfg_data.threshold:
+                if epoch % basic_cfg_data.period == (basic_cfg_data.period - 1) or epoch == (epochs - 1) or accuracy > basic_cfg_data.threshold:
                     pf.loss_plot(train_loss, val_loss, img_dir_path, epoch)
                     pf.accuracy_plot(train_accuracy, val_accuracy, img_dir_path, epoch)
-
-                if epoch % 20 == 19 or epoch == (epochs - 1) or accuracy > basic_cfg_data.threshold:
+                    mf.save_model(model, optimizer, models_dir_path, epoch)
                     storage_path = ut.generate_saved_data_file_info(storage_dir_path, epoch)
                     ut.save_result(storage_path, y_scores_npy, predicts_npy, truth_npy)
-                    mf.save_model(model, optimizer, models_dir_path, epoch)
-
                     output = oa.read_result_data(storage_path)
                     oa.result_report(output, 'truth_val', 'predicts_val', 'val report')
                     oa.result_report(output, 'truth_train', 'predicts_train', 'train report')
@@ -182,7 +180,7 @@ if __name__ == '__main__':
         basic_cfg = BC.BasicConfigController("../workspace/basic_cfg.json")
         basic_cfg_data = BCD.BasicConfigData(**basic_cfg.values)
         initialization()
-        model, criterion, optimizer, scheduler = initial_network(ctrl.folder_in_workspace('models'))
+        model, criterion, optimizer, scheduler = initial_network()
         dataloaders = running_profile()
 
         train(dataloaders, model, criterion, optimizer, scheduler)

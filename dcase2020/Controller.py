@@ -65,3 +65,7 @@ class Controller(object):
 
     def folder_in_workspace(self, folder_name):
         return self.paths[folder_name]
+
+    def pretrained_model_path(self):
+        path = os.path.join(self.paths['models'], self.pretrained_model_name)
+        return path

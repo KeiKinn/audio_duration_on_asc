@@ -46,7 +46,3 @@ def get_train_model(backbone=None, pretrain=False, path=None, slices=0.0):
     lf.logging_something('model\n {}'.format(model))
     lf.logging_something("Trainable parameters sum in the model: {}".format(model.count_pars()))
     return model
-
-
-def count_pars(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
