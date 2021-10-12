@@ -5,7 +5,7 @@ import torch.optim as optim
 import torch.utils.data
 import argparse
 import time
-import config as c
+import constants as c
 import itertools
 import plot_functions as pf
 import utils as ut
@@ -148,9 +148,12 @@ def train(dataloaders, model, criterion, optimizer, scheduler):
                 if epoch % basic_cfg_data.period == (basic_cfg_data.period - 1) or epoch == (epochs - 1) or accuracy > basic_cfg_data.threshold:
                     pf.loss_plot(train_loss, val_loss, img_dir_path, epoch)
                     pf.accuracy_plot(train_accuracy, val_accuracy, img_dir_path, epoch)
+
                     mf.save_model(model, optimizer, models_dir_path, epoch)
+
                     storage_path = ut.generate_saved_data_file_info(storage_dir_path, epoch)
-                    ut.save_result(storage_path, y_scores_npy, predicts_npy, truth_npy)
+                    ut.save_result(storage_path, y_scores_npy, predicts_npy, truth_npy, basic_cfg_data.is_data_save)
+
                     output = oa.read_result_data(storage_path)
                     oa.result_report(output, 'truth_val', 'predicts_val', 'val report')
                     oa.result_report(output, 'truth_train', 'predicts_train', 'train report')

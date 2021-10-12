@@ -1,10 +1,9 @@
 import os
 import torch
-import config as c
-import model as md
 import logging_functions as lf
+import model as md
 
-
+# Note: this is easy to transplant
 def generate_models_file_info(models_dir_path, tag):
     while os.path.isfile(models_dir_path + '/saved_model_{}.pth'.format(tag)):
         tag += 10000

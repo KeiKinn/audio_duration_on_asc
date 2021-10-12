@@ -4,9 +4,9 @@ import torch
 sys.path.append(os.path.join(sys.path[0], '../'))
 import Model as M
 import model_components as mc
-import config as c
+import constants as c
 
-
+# Note: this is easy to transplant
 class BaselineCNN(M.Model):
     def __init__(self, in_c, n_cls, slices=0.0):
         super(BaselineCNN, self).__init__()

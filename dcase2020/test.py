@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.utils.data
 import argparse
 import time
-import config as c
+import constants as c
 import itertools
 import utils as ut
 import model_functions as mf

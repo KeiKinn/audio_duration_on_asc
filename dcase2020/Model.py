@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-
+# Note: this is easy to transplant, but some modifications should be done
 class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()

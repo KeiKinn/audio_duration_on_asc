@@ -3,7 +3,7 @@ import torch
 import time
 import utils as ut
 
-
+# Note: need modify for new projects
 class Controller(object):
     def __init__(self, args):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

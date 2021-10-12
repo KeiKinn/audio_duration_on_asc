@@ -2,6 +2,7 @@ import os
 import json
 
 
+# Note: this is easy to transplant
 class BasicConfigController(object):
     def __init__(self, path='../workspace/basic_cfg.json'):
         super(BasicConfigController, self).__init__()

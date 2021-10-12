@@ -3,8 +3,8 @@ os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-def loss_plot(train_loss, val_loss, path, epoch,isSave=1):
+# Note: this is easy to transplant
+def loss_plot(train_loss, val_loss, path, epoch, isSave=1):
 	fig, ax = plt.subplots()
 	ax.plot(train_loss, label='train_loss')
 	ax.plot(val_loss, label='val_loss')
@@ -34,7 +34,7 @@ def accuracy_plot(train_accuracy, val_accuracy, path, epoch, isSave=1):
 	plt.yticks(my_y_ticks)
 
 	while os.path.isfile(path+'/accuracy_{}.png'.format(epoch)):
-		epoch += 10000000
+		epoch += 10000
 	fig_path = path+'/accuracy_{}.png'.format(epoch)
 
 	if isSave:

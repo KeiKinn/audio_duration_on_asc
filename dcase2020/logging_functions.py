@@ -4,7 +4,7 @@ import torch
 import time
 from utils import create_folder
 
-
+# Note: this is easy to transplant
 def create_logging(log_dir, log_name='default'):
     create_folder(log_dir)
     filemode = 'w'

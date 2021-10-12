@@ -1,10 +1,10 @@
 import os
 import sys
-
 sys.path.append(os.path.join(sys.path[0], '../'))
 import torch.nn as nn
 
 
+# Note: this is easy to transplant
 def conv_block(in_f, out_f, activation='relu', bn_learn=True, *args, **kwargs):
     activations = nn.ModuleDict({
         'relu': nn.ReLU(),
@@ -40,6 +40,7 @@ def baseline_encoder(in_c, slices=0.0):
 
 
 def res_encoder(in_c, layers=None, dual=False):
+
     res_block_bn_learn = True
     encoder = nn.Sequential(
         conv_block(in_c, 16, bn_learn=True, kernel_size=3, padding=1, stride=[1, 3]),
@@ -75,10 +76,10 @@ class ResNetBlock(nn.Module):
     def __init__(self, in_ch, out_ch, bn_learn=True):
         super(ResNetBlock, self).__init__()
 
-        self.conv_identity = conv_block(in_ch, out_ch, activation='relu', bn_learn=bn_learn, kernel_size=1, padding=0,
-                                        stride=1)
+        self.conv_identity = conv_block(in_ch, out_ch, activation='relu', bn_learn=bn_learn, kernel_size=1, padding=0, stride=1)
         self.conv1 = conv_block(in_ch, out_ch, bn_learn=bn_learn, kernel_size=3, padding=1, stride=1)
         self.conv2 = conv_block(out_ch, out_ch, bn_learn=bn_learn, kernel_size=3, padding=1, stride=1)
+
 
     def forward(self, x):
         identity = x

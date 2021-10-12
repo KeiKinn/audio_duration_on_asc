@@ -4,10 +4,10 @@ import numpy as np
 import DatasetGenerator as dg
 import logging
 from sklearn.metrics import recall_score, confusion_matrix, roc_auc_score
-import config as c
+import constants as c
 import random
 
-
+# Note: this is easy to transplant, need little modifications
 def create_folder(fd):
     if not os.path.exists(fd):
         os.makedirs(fd)
@@ -20,10 +20,10 @@ def get_dataset(backbone, database, profile='train'):
     elif "dresnet" == backbone:
         database_name = c.databases
 
-
     train_hdf5_path = os.path.join(database, 'DCASE2020', database_name[profile])
     val_hdf5_path = os.path.join(database, 'DCASE2020', database_name['eva'])
     test_hdf5_path = os.path.join(database, 'DCASE2020', database_name['test'])
+
     train_dataset = dg.DCASE2020(hdf5_path=train_hdf5_path, backbone=backbone)
     val_dataset = dg.DCASE2020(hdf5_path=val_hdf5_path, backbone=backbone)
     test_dataset = dg.DCASE2020(hdf5_path=test_hdf5_path, backbone=backbone)
@@ -44,6 +44,7 @@ def get_train_data(backbone, batch_data, device, alpha, phase, slices=0.0):
     labels = batch_data['label'].type(torch.LongTensor).to(device)
     inputs, labels, labels_b, lam = mixup_data(inputs, labels, alpha=alpha_temp, device=device)
     return inputs, labels, labels_b, lam
+
 
 def adjust_data(batch_data, device, key, slices=0.0, phase='train'):
     result = batch_data[key].to(device)
@@ -76,30 +77,31 @@ def generate_saved_data_file_info(storage_dir_path, tag):
     return storage_path
 
 
-def save_result(saved_data_path, y_scores_npy, predicts_npy, truth_npy, mode='train'):
-    if 'train' in mode:
-        y_scores_train = np.hstack(y_scores_npy[::2])
-        y_scores_val = np.hstack(y_scores_npy[1::2])
-        predicts_train = np.hstack(predicts_npy[::2])
-        predicts_val = np.hstack(predicts_npy[1::2])
-        truth_train = np.hstack(truth_npy[::2])
-        truth_val = np.hstack(truth_npy[1::2])
+def save_result(saved_data_path, y_scores_npy, predicts_npy, truth_npy, mode='train', isSave=1):
+    if isSave:
+        if 'train' in mode:
+            y_scores_train = np.hstack(y_scores_npy[::2])
+            y_scores_val = np.hstack(y_scores_npy[1::2])
+            predicts_train = np.hstack(predicts_npy[::2])
+            predicts_val = np.hstack(predicts_npy[1::2])
+            truth_train = np.hstack(truth_npy[::2])
+            truth_val = np.hstack(truth_npy[1::2])
 
-        np.savez(saved_data_path,
-                y_scores_train=y_scores_train,
-                predicts_train=predicts_train,
-                truth_train=truth_train,
-                y_scores_val=y_scores_val,
-                predicts_val=predicts_val,
-                truth_val=truth_val)
-    elif 'test' in mode:
-        np.savez(saved_data_path, 
-                y_scores=y_scores_npy,
-                predicts=predicts_npy,
-                truth=truth_npy)
+            np.savez(saved_data_path,
+                    y_scores_train=y_scores_train,
+                    predicts_train=predicts_train,
+                    truth_train=truth_train,
+                    y_scores_val=y_scores_val,
+                    predicts_val=predicts_val,
+                    truth_val=truth_val)
+        elif 'test' in mode:
+            np.savez(saved_data_path,
+                    y_scores=y_scores_npy,
+                    predicts=predicts_npy,
+                    truth=truth_npy)
 
-    logging.info('*' * 10)
-    logging.info('Output data with have been saved at {}'.format(saved_data_path))
+        logging.info('*' * 10)
+        logging.info('Output data with have been saved at {}'.format(saved_data_path))
 
 
 def mixup_data(x, y, alpha=-1.0, device='cpu'):
